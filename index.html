@@ -29,6 +29,22 @@
     .empty{background:var(--surface);border:1px dashed var(--line);padding:28px;border-radius:16px;text-align:center;color:var(--muted)}
     .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:min(57vh,520px);min-height:300px;overflow:auto;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1.12rem);line-height:1.75;overscroll-behavior:contain}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
     footer{padding:22px 0 32px;text-align:center;color:var(--muted);font-size:.85rem}
+
+    .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+    .chord-library h3{font-size:1.08rem;margin:0 0 4px}.chord-library-intro{margin:0 0 14px;color:var(--muted);font-size:.88rem}
+    .chord-groups{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .chord-group{border:1px solid var(--line);border-radius:15px;padding:12px;min-width:0}
+    .chord-group h4{margin:0 0 10px;font-size:.95rem}
+    .chord-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:9px}
+    .chord-card{border:1px solid var(--line);border-radius:12px;padding:9px 6px;text-align:center;background:var(--bg);min-width:0}
+    .chord-card strong{display:block;margin-bottom:6px}
+    .guitar-svg{width:78px;height:112px;max-width:100%;display:block;margin:auto}
+    .piano-wrap{height:112px;position:relative;display:flex;margin:0 auto;max-width:180px}
+    .piano-white{height:100%;flex:1;min-width:0;background:#fff;border:1px solid #66716a;border-radius:0 0 4px 4px;position:relative}
+    .piano-white.active{background:#9fe2ba}
+    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 3px 3px;z-index:2;pointer-events:none}
+    .piano-note{font-size:.7rem;color:var(--muted);margin-top:6px}
+    @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:650px){.shell{width:min(100% - 22px,1040px)}header{padding-top:22px;border-radius:0 0 22px 22px}.brand-icon{width:45px;height:45px}.top-actions{gap:5px}.icon-btn{width:39px;height:39px}.alphabet{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.popular{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.song-card{padding:11px}.cover{height:82px}.section-head{align-items:flex-start;flex-direction:column}.lyrics{height:58vh;min-height:280px;padding:18px 16px}.speed{min-width:100%}}
     @media(max-width:380px){.popular{grid-template-columns:1fr}.cover{height:75px}.tagline{font-size:.88rem}}
   </style>
@@ -79,6 +95,14 @@
           <button class="btn primary" id="pauseBtn">Ⅱ Jeda</button>
         </div>
       </div>
+      <section class="chord-library" aria-labelledby="chordLibraryTitle">
+        <h3 id="chordLibraryTitle">Chord Lagu Ini</h3>
+        <p class="chord-library-intro">Semua chord yang digunakan dalam lagu ditampilkan di sini untuk gitar dan piano.</p>
+        <div class="chord-groups">
+          <div class="chord-group"><h4>🎸 Diagram Gitar</h4><div class="chord-cards" id="guitarChordCards"></div></div>
+          <div class="chord-group"><h4>🎹 Tuts Piano</h4><div class="chord-cards" id="pianoChordCards"></div></div>
+        </div>
+      </section>
       <div class="reader">
         <div class="reader-label"><span>LIRIK & CHORD</span><span id="scrollStatus">Auto-scroll aktif</span></div>
         <div class="lyrics" id="lyricsBox" tabindex="0" aria-label="Lirik dan chord yang dapat digulir">
@@ -100,9 +124,9 @@
   <script>
     document.getElementById("copyrightYear").textContent = new Date().getFullYear();
     const songs = [
-      {id:1,title:"Contoh Lagu Dayak 1",artist:"Contoh Penyanyi A",popular:3},
-      {id:2,title:"Contoh Lagu Dayak 2",artist:"Contoh Penyanyi B",popular:2},
-      {id:3,title:"Contoh Lagu Dayak 3",artist:"Contoh Band C",popular:1}
+      {id:1,title:"Contoh Lagu Dayak 1",artist:"Contoh Penyanyi A",popular:3,chords:["C","G","Am","F"]},
+      {id:2,title:"Contoh Lagu Dayak 2",artist:"Contoh Penyanyi B",popular:2,chords:["C","G","Am","F"]},
+      {id:3,title:"Contoh Lagu Dayak 3",artist:"Contoh Band C",popular:1,chords:["C","G","Am","F"]}
     ];
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const alphabet = document.getElementById("alphabet");
@@ -163,8 +187,57 @@
       emptyState.hidden=filtered.length>0;
       document.getElementById("popularHeading").textContent=q||selectedLetter?"Hasil pencarian":"Lagu Populer";
     }
+
+    const chordNotes = {
+      "C":["C","E","G"],"Cm":["C","D#","G"],"C7":["C","E","G","A#"],"Cm7":["C","D#","G","A#"],
+      "C#":["C#","F","G#"],"C#m":["C#","E","G#"],"D":["D","F#","A"],"Dm":["D","F","A"],"D7":["D","F#","A","C"],
+      "D#":["D#","G","A#"],"Eb":["D#","G","A#"],"E":["E","G#","B"],"Em":["E","G","B"],"E7":["E","G#","B","D"],
+      "F":["F","A","C"],"Fm":["F","G#","C"],"F7":["F","A","C","D#"],"F#":["F#","A#","C#"],"F#m":["F#","A","C#"],
+      "G":["G","B","D"],"Gm":["G","A#","D"],"G7":["G","B","D","F"],"G#":["G#","C","D#"],"Ab":["G#","C","D#"],
+      "A":["A","C#","E"],"Am":["A","C","E"],"A7":["A","C#","E","G"],"A#":["A#","D","F"],"Bb":["A#","D","F"],
+      "Bm":["B","D","F#"],"B":["B","D#","F#"],"B7":["B","D#","F#","A"]
+    };
+    const guitarShapes = {
+      "C":[-1,3,2,0,1,0],"G":[3,2,0,0,0,3],"Am":[-1,0,2,2,1,0],"F":[1,3,3,2,1,1],
+      "D":[-1,-1,0,2,3,2],"Dm":[-1,-1,0,2,3,1],"E":[0,2,2,1,0,0],"Em":[0,2,2,0,0,0],
+      "A":[-1,0,2,2,2,0],"Bm":[-1,2,4,4,3,2],"G7":[3,2,0,0,0,1],"E7":[0,2,0,1,0,0],
+      "D7":[-1,-1,0,2,1,2],"A7":[-1,0,2,0,2,0]
+    };
+    function normalizeChord(chord){return String(chord||"").trim().replace(/\s+/g,"");}
+    function guitarDiagram(chord){
+      const shape=guitarShapes[chord]||null, x0=12, y0=18, dx=10, dy=16;
+      let svg='<svg class="guitar-svg" viewBox="0 0 84 112" role="img" aria-label="Diagram gitar '+chord+'">';
+      for(let i=0;i<6;i++) svg+='<line x1="'+(x0+i*dx)+'" y1="'+y0+'" x2="'+(x0+i*dx)+'" y2="'+(y0+4*dy)+'" stroke="currentColor" stroke-width="'+(i===0?1.8:1)+'"/>';
+      for(let f=0;f<=4;f++) svg+='<line x1="'+x0+'" y1="'+(y0+f*dy)+'" x2="'+(x0+5*dx)+'" y2="'+(y0+f*dy)+'" stroke="currentColor" stroke-width="'+(f===0?2.5:1)+'"/>';
+      if(shape){shape.forEach((f,i)=>{const x=x0+i*dx;if(f===-1)svg+='<text x="'+x+'" y="11" font-size="9" text-anchor="middle" fill="currentColor">×</text>';else if(f===0)svg+='<circle cx="'+x+'" cy="10" r="3" fill="none" stroke="currentColor"/>';else if(f<=4)svg+='<circle cx="'+x+'" cy="'+(y0+(f-.5)*dy)+'" r="3.4" fill="var(--accent)"/>';});}
+      else svg+='<text x="42" y="100" font-size="8" text-anchor="middle" fill="currentColor">Bentuk umum</text>';
+      return svg+'</svg>';
+    }
+    function pianoDiagram(chord){
+      const notes=chordNotes[chord]||chordNotes[chord.replace(/m$/,"")]||[];
+      const white=["C","D","E","F","G","A","B"], black=[{n:"C#",x:10},{n:"D#",x:24},{n:"F#",x:52},{n:"G#",x:66},{n:"A#",x:80}];
+      let html='<div class="piano-wrap" role="img" aria-label="Tuts piano chord '+chord+'">';
+      white.forEach(n=>html+='<div class="piano-white '+(notes.includes(n)?"active":"")+'"></div>');
+      black.forEach(k=>{html+='<div class="piano-black" style="left:'+k.x+'%"'+(notes.includes(k.n)?' data-active="true"':'')+'></div>';});
+      html+='</div><div class="piano-note">'+(notes.length?notes.join(" · "):"Chord "+chord)+'</div>';
+      return html;
+    }
+    function renderChordLibrary(song){
+      let chordList=Array.isArray(song.chords)?song.chords.slice():[];
+      if(!chordList.length) chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
+      chordList=Array.from(new Set(chordList.map(normalizeChord).filter(Boolean)));
+      const guitar=document.getElementById("guitarChordCards"), piano=document.getElementById("pianoChordCards");
+      guitar.innerHTML="";piano.innerHTML="";
+      chordList.forEach(chord=>{
+        const g=document.createElement("div");g.className="chord-card";g.innerHTML='<strong></strong>'+guitarDiagram(chord);g.querySelector("strong").textContent=chord;guitar.appendChild(g);
+        const p=document.createElement("div");p.className="chord-card";p.innerHTML='<strong></strong>'+pianoDiagram(chord);p.querySelector("strong").textContent=chord;piano.appendChild(p);
+      });
+      if(!chordList.length){guitar.textContent="Belum ada chord.";piano.textContent="Belum ada chord.";}
+    }
+
     function openSong(song){
-      activeSong=song;homeView.classList.remove("active");detailView.classList.add("active");
+      activeSong=song;
+      renderChordLibrary(song);homeView.classList.remove("active");detailView.classList.add("active");
       document.getElementById("detailTitle").textContent=song.title;
       document.getElementById("detailArtist").textContent=song.artist;
       lyricsBox.scrollTop=0;paused=false;document.getElementById("pauseBtn").textContent="Ⅱ Jeda";
