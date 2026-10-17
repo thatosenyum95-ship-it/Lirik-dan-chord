@@ -22,7 +22,7 @@
     main{padding:25px 0 50px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px}.section-head h2{font-size:1.12rem;margin:0}.muted{color:var(--muted)}.small{font-size:.85rem}
     .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .btn{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 14px;border-radius:12px;font-weight:650}.btn.primary{background:var(--accent);border-color:var(--accent);color:white}.btn:focus-visible,.icon-btn:focus-visible,input:focus-visible{outline:3px solid #82cfa5;outline-offset:2px}
-    .alphabet{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:5px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:17px}
+    .alphabet-menu{display:none;margin-bottom:20px}.alphabet-menu.open{display:block}.alphabet{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:5px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:17px}
     .letter{border:0;border-radius:8px;padding:7px 0;background:var(--surface2);color:var(--text);font-weight:700;font-size:.84rem}.letter.active{background:var(--accent);color:#fff}
     .artist-panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}.artist-panel.open{display:block}.artist-list{display:flex;flex-wrap:wrap;gap:8px}.artist-chip{border:1px solid var(--line);border-radius:999px;background:var(--surface2);padding:8px 12px;color:var(--text)}
     .popular{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.song-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;color:var(--text);box-shadow:var(--shadow);min-width:0}.song-card:hover{transform:translateY(-2px);border-color:var(--accent);transition:.18s}.cover{height:105px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#dcefe4,#b7d9c2);color:#245b43;font-size:2rem;margin-bottom:13px}.dark .cover{background:linear-gradient(135deg,#263f31,#345b43);color:#d4f2df}.song-title{font-weight:800;margin:0 0 3px;overflow-wrap:anywhere}.song-artist{font-size:.88rem;color:var(--muted);margin:0}.song-meta{font-size:.75rem;color:var(--muted);margin-top:12px}
@@ -54,10 +54,13 @@
   <main class="shell">
     <section id="homeView" class="view active">
       <div class="section-head"><h2>Jelajahi Penyanyi & Band</h2><span class="muted small">Urut otomatis A–Z</span></div>
-      <div class="alphabet" id="alphabet" aria-label="Filter abjad"></div>
-      <div class="artist-panel" id="artistPanel">
-        <div class="section-head"><h2 id="artistHeading">Penyanyi</h2><button class="btn" id="clearLetter">Lihat semua</button></div>
-        <div class="artist-list" id="artistList"></div>
+      <div class="alphabet-menu" id="alphabetMenu">
+        <div class="section-head"><h2>Pilih Abjad</h2><span class="muted small">A–Z</span></div>
+        <div class="alphabet" id="alphabet" aria-label="Filter abjad"></div>
+        <div class="artist-panel" id="artistPanel">
+          <div class="section-head"><h2 id="artistHeading">Penyanyi</h2><button class="btn" id="clearLetter">Lihat semua</button></div>
+          <div class="artist-list" id="artistList"></div>
+        </div>
       </div>
       <div class="section-head" style="margin-top:28px"><h2 id="popularHeading">Lagu Populer</h2><span class="muted small">Contoh tampilan</span></div>
       <div class="popular" id="songGrid"></div>
@@ -193,7 +196,13 @@
     document.getElementById("smallerBtn").onclick=()=>{fontSize=Math.max(.82,fontSize-.1);lyricsBox.style.setProperty("--lyric-size",fontSize+"rem");};
     document.getElementById("largerBtn").onclick=()=>{fontSize=Math.min(1.8,fontSize+.1);lyricsBox.style.setProperty("--lyric-size",fontSize+"rem");};
     document.getElementById("backBtn").onclick=()=>{stopScroll();detailView.classList.remove("active");homeView.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});};
-    document.getElementById("menuBtn").onclick=()=>{artistPanel.classList.toggle("open");if(artistPanel.classList.contains("open"))renderArtists();};
+    document.getElementById("menuBtn").onclick=()=>{
+      const menu=document.getElementById("alphabetMenu");
+      const isOpen=menu.classList.toggle("open");
+      document.getElementById("menuBtn").setAttribute("aria-expanded",String(isOpen));
+      document.getElementById("menuBtn").setAttribute("aria-label",isOpen?"Tutup daftar abjad":"Buka daftar abjad A sampai Z");
+      if(!isOpen)artistPanel.classList.remove("open");
+    };
     document.getElementById("clearLetter").onclick=()=>{selectedLetter="";renderAlphabet();renderArtists();renderSongs();};
     searchInput.addEventListener("input",()=>{renderSongs();if(artistPanel.classList.contains("open"))renderArtists();});
     document.getElementById("themeBtn").onclick=()=>{
