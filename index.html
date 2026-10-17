@@ -42,7 +42,7 @@
     .piano-wrap{height:112px;position:relative;display:flex;margin:0 auto;max-width:180px}
     .piano-white{height:100%;flex:1;min-width:0;background:#fff;border:1px solid #66716a;border-radius:0 0 4px 4px;position:relative}
     .piano-white.active{background:#9fe2ba}
-    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 3px 3px;z-index:2;pointer-events:none}
+    .piano-black[data-active="true"]{background:#4b9368;border-color:#4b9368}\n    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 3px 3px;z-index:2;pointer-events:none}
     .piano-note{font-size:.7rem;color:var(--muted);margin-top:6px}
     @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:650px){.shell{width:min(100% - 22px,1040px)}header{padding-top:22px;border-radius:0 0 22px 22px}.brand-icon{width:45px;height:45px}.top-actions{gap:5px}.icon-btn{width:39px;height:39px}.alphabet{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.popular{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.song-card{padding:11px}.cover{height:82px}.section-head{align-items:flex-start;flex-direction:column}.lyrics{height:58vh;min-height:280px;padding:18px 16px}.speed{min-width:100%}}
