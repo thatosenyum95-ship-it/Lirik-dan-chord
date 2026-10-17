@@ -79,10 +79,10 @@
           <div class="artist-list" id="artistList"></div>
         </div>
       </div>
-      <div class="section-head" style="margin-top:28px"><h2 id="popularHeading">Lagu Populer</h2><span class="muted small">Contoh tampilan</span></div>
+      <div class="section-head" style="margin-top:28px"><h2 id="popularHeading">Lagu Populer</h2><span class="muted small">Database online</span></div>
       <div class="popular" id="songGrid"></div>
       <div id="emptyState" class="empty" hidden>Belum ada lagu yang cocok. Coba kata kunci lain.</div>
-      <p class="muted small" style="margin-top:16px">Catatan: lagu yang tampil saat ini adalah data contoh untuk menguji tampilan. Lirik dan chord asli ditambahkan setelah data lagu tersedia.</p>
+      <p class="muted small" style="margin-top:16px">Lagu ditampilkan dari database online. Admin dapat menambah atau memperbarui lagu melalui halaman admin.</p>
     </section>
 
     <section id="detailView" class="view">
@@ -121,7 +121,7 @@
   </main>
   <footer class="shell">LIRIK DAN CHORD · Khusus Lagu Dayak Kalimantan</footer>
 
-  <footer class="shell">© <span id="copyrightYear"></span> LIRIK DAN CHORD · <a href="privacy.html" style="color:inherit">Kebijakan Privasi</a> · <a href="admin.html" style="color:inherit">Admin lokal</a></footer>
+  <footer class="shell">© <span id="copyrightYear"></span> LIRIK DAN CHORD · <a href="privacy.html" style="color:inherit">Kebijakan Privasi</a> · <a href="admin.html" style="color:inherit">Admin</a></footer>
   <script>
     document.getElementById("copyrightYear").textContent = new Date().getFullYear();
     const demoSongs = [
@@ -129,13 +129,26 @@
       {id:2,title:"Contoh Lagu Dayak 2",artist:"Contoh Penyanyi B",popular:2,chords:["C","G","Am","F"]},
       {id:3,title:"Contoh Lagu Dayak 3",artist:"Contoh Band C",popular:1,chords:["C","G","Am","F"]}
     ];
-    const LOCAL_SONGS_KEY = "dayakLyricsSongs";
-    function getLocalSongs(){
-      try { const value=JSON.parse(localStorage.getItem(LOCAL_SONGS_KEY)||"[]"); return Array.isArray(value)?value:[]; }
-      catch(_){ return []; }
+    const SUPABASE_URL = "https://atswttlqjycruzxuohfw.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_oggTNyIqnoaMtUhk-2PxUQ_9V_CHTWj";
+    let songs = [];
+    async function loadRemoteSongs(){
+      try {
+        const response = await fetch(SUPABASE_URL + "/rest/v1/dayak_songs?select=id,title,artist,lyrics,chords,is_published&is_published=eq.true&order=title.asc", {
+          headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+        });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const rows = await response.json();
+        songs = rows.map(song => ({...song, popular: 0}));
+        renderAlphabet(); renderSongs();
+        document.querySelector("#homeView .section-head .muted.small").textContent = songs.length + " lagu tersedia";
+      } catch (error) {
+        songs = [];
+        renderAlphabet(); renderSongs();
+        document.getElementById("emptyState").textContent = "Lagu belum dapat dimuat. Periksa koneksi internet atau konfigurasi Supabase.";
+        document.getElementById("emptyState").hidden = false;
+      }
     }
-    const localSongs = getLocalSongs();
-    const songs = [...demoSongs, ...localSongs.map((song,i)=>({...song,id:"local-"+(song.id||i),popular:0,isLocal:true}))];
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const alphabet = document.getElementById("alphabet");
     const artistPanel = document.getElementById("artistPanel");
@@ -312,7 +325,7 @@
       document.getElementById("themeBtn").textContent=dark?"☀":"☾";
       document.getElementById("themeBtn").title=dark?"Mode terang":"Mode gelap";
     };
-    renderAlphabet();renderSongs();
+    renderAlphabet();renderSongs();loadRemoteSongs();
   </script>
 </body>
 </html>
