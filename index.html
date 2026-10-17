@@ -224,8 +224,9 @@
       return html;
     }
     function renderChordLibrary(song){
-      let chordList=Array.isArray(song.chords)?song.chords.slice():[];
-      if(!chordList.length) chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
+      // Ambil chord dari simbol yang tampil pada lirik agar daftar diagram mengikuti lirik.
+      let chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
+      if(!chordList.length && Array.isArray(song.chords)) chordList=song.chords.slice();
       chordList=Array.from(new Set(chordList.map(normalizeChord).filter(Boolean)));
       const guitar=document.getElementById("guitarChordCards"), piano=document.getElementById("pianoChordCards");
       guitar.innerHTML="";piano.innerHTML="";
