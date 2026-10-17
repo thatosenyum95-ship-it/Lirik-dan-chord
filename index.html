@@ -30,21 +30,22 @@
     .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:min(57vh,520px);min-height:300px;overflow:auto;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1.12rem);line-height:1.75;overscroll-behavior:contain}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
     footer{padding:22px 0 32px;text-align:center;color:var(--muted);font-size:.85rem}
 
-    .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
-    .chord-library h3{font-size:1.08rem;margin:0 0 4px}.chord-library-intro{margin:0 0 14px;color:var(--muted);font-size:.88rem}
-    .chord-groups{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .chord-group{border:1px solid var(--line);border-radius:15px;padding:12px;min-width:0}
-    .chord-group h4{margin:0 0 10px;font-size:.95rem}
-    .chord-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:9px}
-    .chord-card{border:1px solid var(--line);border-radius:12px;padding:9px 6px;text-align:center;background:var(--bg);min-width:0}
-    .chord-card strong{display:block;margin-bottom:6px}
-    .guitar-svg{width:78px;height:112px;max-width:100%;display:block;margin:auto}
-    .piano-wrap{height:112px;position:relative;display:flex;margin:0 auto;max-width:180px}
-    .piano-white{height:100%;flex:1;min-width:0;background:#fff;border:1px solid #66716a;border-radius:0 0 4px 4px;position:relative}
+    .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:14px}
+    .chord-library h3{font-size:.98rem;margin:0 0 3px}.chord-library-intro{margin:0 0 10px;color:var(--muted);font-size:.78rem}
+    .chord-groups{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .chord-group{border:1px solid var(--line);border-radius:11px;padding:8px;min-width:0}
+    .chord-group h4{margin:0 0 7px;font-size:.8rem}
+    .chord-cards{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
+    .chord-card{border:1px solid var(--line);border-radius:8px;padding:5px 4px;text-align:center;background:var(--bg);width:68px;min-width:0}
+    .chord-card strong{display:block;font-size:.78rem;margin-bottom:3px}
+    .guitar-svg{width:43px;height:62px;max-width:100%;display:block;margin:auto}
+    .piano-wrap{height:62px;position:relative;display:flex;margin:0 auto;max-width:62px}
+    .piano-white{height:100%;flex:1;min-width:0;background:#fff;border:1px solid #66716a;border-radius:0 0 3px 3px;position:relative}
     .piano-white.active{background:#9fe2ba}
-    .piano-black[data-active="true"]{background:#4b9368;border-color:#4b9368}\n    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 3px 3px;z-index:2;pointer-events:none}
-    .piano-note{font-size:.7rem;color:var(--muted);margin-top:6px}
-    @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .piano-black[data-active="true"]{background:#4b9368;border-color:#4b9368}
+    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 2px 2px;z-index:2;pointer-events:none}
+    .piano-note{font-size:.58rem;color:var(--muted);margin-top:3px;line-height:1.2}
+    @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-card{width:66px}.guitar-svg{width:40px;height:58px}.piano-wrap{height:58px;max-width:58px}}
     @media(max-width:650px){.shell{width:min(100% - 22px,1040px)}header{padding-top:22px;border-radius:0 0 22px 22px}.brand-icon{width:45px;height:45px}.top-actions{gap:5px}.icon-btn{width:39px;height:39px}.alphabet{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.popular{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.song-card{padding:11px}.cover{height:82px}.section-head{align-items:flex-start;flex-direction:column}.lyrics{height:58vh;min-height:280px;padding:18px 16px}.speed{min-width:100%}}
     @media(max-width:380px){.popular{grid-template-columns:1fr}.cover{height:75px}.tagline{font-size:.88rem}}
   </style>
@@ -95,14 +96,6 @@
           <button class="btn primary" id="pauseBtn">Ⅱ Jeda</button>
         </div>
       </div>
-      <section class="chord-library" aria-labelledby="chordLibraryTitle">
-        <h3 id="chordLibraryTitle">Chord Lagu Ini</h3>
-        <p class="chord-library-intro">Semua chord yang digunakan dalam lagu ditampilkan di sini untuk gitar dan piano.</p>
-        <div class="chord-groups">
-          <div class="chord-group"><h4>🎸 Diagram Gitar</h4><div class="chord-cards" id="guitarChordCards"></div></div>
-          <div class="chord-group"><h4>🎹 Tuts Piano</h4><div class="chord-cards" id="pianoChordCards"></div></div>
-        </div>
-      </section>
       <div class="reader">
         <div class="reader-label"><span>LIRIK & CHORD</span><span id="scrollStatus">Auto-scroll aktif</span></div>
         <div class="lyrics" id="lyricsBox" tabindex="0" aria-label="Lirik dan chord yang dapat digulir">
@@ -116,6 +109,14 @@
         </div>
         <div class="reader-footer"><span>Atur kecepatan sesuai kenyamananmu.</span><span>Gunakan Jeda untuk berhenti sementara.</span></div>
       </div>
+      <section class="chord-library" aria-labelledby="chordLibraryTitle">
+        <h3 id="chordLibraryTitle">Chord Lagu Ini</h3>
+        <p class="chord-library-intro">Semua chord yang digunakan dalam lagu ditampilkan di sini untuk gitar dan piano.</p>
+        <div class="chord-groups">
+          <div class="chord-group"><h4>🎸 Diagram Gitar</h4><div class="chord-cards" id="guitarChordCards"></div></div>
+          <div class="chord-group"><h4>🎹 Tuts Piano</h4><div class="chord-cards" id="pianoChordCards"></div></div>
+        </div>
+      </section>
     </section>
   </main>
   <footer class="shell">LIRIK DAN CHORD · Khusus Lagu Dayak Kalimantan</footer>
