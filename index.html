@@ -96,7 +96,9 @@
   </main>
   <footer class="shell">LIRIK DAN CHORD · Khusus Lagu Dayak Kalimantan</footer>
 
+  <footer class="shell">© <span id="copyrightYear"></span> LIRIK DAN CHORD · <a href="privacy.html" style="color:inherit">Kebijakan Privasi</a></footer>
   <script>
+    document.getElementById("copyrightYear").textContent = new Date().getFullYear();
     const songs = [
       {id:1,title:"Contoh Lagu Dayak 1",artist:"Contoh Penyanyi A",popular:3},
       {id:2,title:"Contoh Lagu Dayak 2",artist:"Contoh Penyanyi B",popular:2},
