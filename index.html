@@ -121,14 +121,21 @@
   </main>
   <footer class="shell">LIRIK DAN CHORD · Khusus Lagu Dayak Kalimantan</footer>
 
-  <footer class="shell">© <span id="copyrightYear"></span> LIRIK DAN CHORD · <a href="privacy.html" style="color:inherit">Kebijakan Privasi</a></footer>
+  <footer class="shell">© <span id="copyrightYear"></span> LIRIK DAN CHORD · <a href="privacy.html" style="color:inherit">Kebijakan Privasi</a> · <a href="admin.html" style="color:inherit">Admin lokal</a></footer>
   <script>
     document.getElementById("copyrightYear").textContent = new Date().getFullYear();
-    const songs = [
+    const demoSongs = [
       {id:1,title:"Contoh Lagu Dayak 1",artist:"Contoh Penyanyi A",popular:3,chords:["C","G","Am","F"]},
       {id:2,title:"Contoh Lagu Dayak 2",artist:"Contoh Penyanyi B",popular:2,chords:["C","G","Am","F"]},
       {id:3,title:"Contoh Lagu Dayak 3",artist:"Contoh Band C",popular:1,chords:["C","G","Am","F"]}
     ];
+    const LOCAL_SONGS_KEY = "dayakLyricsSongs";
+    function getLocalSongs(){
+      try { const value=JSON.parse(localStorage.getItem(LOCAL_SONGS_KEY)||"[]"); return Array.isArray(value)?value:[]; }
+      catch(_){ return []; }
+    }
+    const localSongs = getLocalSongs();
+    const songs = [...demoSongs, ...localSongs.map((song,i)=>({...song,id:"local-"+(song.id||i),popular:0,isLocal:true}))];
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const alphabet = document.getElementById("alphabet");
     const artistPanel = document.getElementById("artistPanel");
@@ -237,8 +244,25 @@
       if(!chordList.length){guitar.textContent="Belum ada chord.";piano.textContent="Belum ada chord.";}
     }
 
+    function renderSongLyrics(song){
+      if(!song.lyrics){return;}
+      lyricsBox.innerHTML="";
+      const lines=String(song.lyrics).split(/\\r?\\n/);
+      lines.forEach(line=>{
+        const verse=document.createElement("div");verse.className="verse";
+        const chordRow=document.createElement("div");chordRow.className="chords";
+        const lyric=document.createElement("p");lyric.className="lyric-line";
+        const found=[]; const clean=line.replace(/\\[([A-G](?:#|b)?(?:m|maj7|m7|7|sus2|sus4|dim|aug)? )?\\]/g,(all,chord)=>{if(chord)found.push(chord.trim());return "";});
+        const matches=[...line.matchAll(/\\[([A-G](?:#|b)?(?:m|maj7|m7|7|sus2|sus4|dim|aug)?)\\]/g)];
+        matches.forEach(match=>{const span=document.createElement("span");span.textContent=match[1];chordRow.appendChild(span);});
+        lyric.textContent=clean.trim();
+        if(!lyric.textContent && !matches.length){return;}
+        verse.appendChild(chordRow);verse.appendChild(lyric);lyricsBox.appendChild(verse);
+      });
+    }
     function openSong(song){
       activeSong=song;
+      renderSongLyrics(song);
       renderChordLibrary(song);homeView.classList.remove("active");detailView.classList.add("active");
       document.getElementById("detailTitle").textContent=song.title;
       document.getElementById("detailArtist").textContent=song.artist;
