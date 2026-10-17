@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14251f">
+<title>Admin Lokal — LIRIK DAN CHORD</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7f4;--surface:#fff;--text:#1b2922;--muted:#6d7b72;--line:#dce5dc;--accent:#1f7556;--soft:#e6f3ea}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#132b22,#245b43);color:#fff;padding:22px 0}main,.shell{width:min(760px,100% - 24px);margin:auto}h1{font-size:1.45rem;line-height:1.2;margin:0}header p{margin:7px 0 0;color:#d2e7d9;font-size:.92rem}
+main{padding:18px 0 40px}.notice{padding:12px 14px;border:1px solid #d7b96d;background:#fff7dc;border-radius:12px;color:#604b12;font-size:.88rem;margin-bottom:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}h2{font-size:1.08rem;margin:0 0 12px}.field{margin-bottom:13px}label{display:block;font-weight:700;font-size:.9rem;margin-bottom:5px}input,textarea{width:100%;font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px}textarea{min-height:190px;resize:vertical}#chords{min-height:75px}.hint{font-size:.8rem;color:var(--muted);margin:5px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px}.btn{font:inherit;font-weight:700;padding:10px 13px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.danger{color:#a32626}.song-item{padding:12px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.song-item:last-child{border-bottom:0}.song-info{flex:1;min-width:0}.song-info strong,.song-info span{display:block;overflow-wrap:anywhere}.song-info span{font-size:.82rem;color:var(--muted)}.song-actions{display:flex;gap:5px;flex-wrap:wrap}.song-actions .btn{padding:7px 9px;font-size:.82rem}.status{font-size:.88rem;color:var(--accent);min-height:1.3em;margin:8px 0 0}a{color:inherit}
+@media(max-width:430px){.card{padding:13px}.song-item{align-items:flex-start;flex-wrap:wrap}.song-info{flex-basis:100%}.song-actions{width:100%}.song-actions .btn{flex:1}}
+</style>
+</head>
+<body>
+<header><div class="shell"><h1>Admin Lagu 🎵</h1><p>LIRIK DAN CHORD · Khusus Lagu Dayak Kalimantan</p></div></header>
+<main>
+<div class="notice"><strong>Penting — penyimpanan lokal.</strong> Lagu disimpan hanya di browser/perangkat ini. Lagu tidak otomatis masuk ke database online dan tidak otomatis terlihat oleh pengunjung lain. Jika data browser dihapus atau kamu berganti perangkat/browser, data bisa hilang. Gunakan Ekspor Cadangan untuk menyimpan salinan.</div>
+<div class="card">
+<h2 id="formTitle">Tambah lagu baru</h2>
+<form id="songForm">
+<div class="field"><label for="title">Judul lagu *</label><input id="title" required maxlength="120" placeholder="Contoh: Nama lagu"></div>
+<div class="field"><label for="artist">Penyanyi / band *</label><input id="artist" required maxlength="120" placeholder="Contoh: Nama penyanyi"></div>
+<div class="field"><label for="lyrics">Lirik lagu *</label><textarea id="lyrics" required placeholder="[C]Masukkan lirik baris pertama&#10;[G]Masukkan lirik baris kedua&#10;[Am]Masukkan lirik berikutnya"></textarea><p class="hint">Letakkan chord di depan baris lirik memakai tanda kurung siku, misalnya [C] atau [Am]. Boleh beberapa chord dalam satu baris: [C]Lirik [G]lanjutan.</p></div>
+<div class="field"><label for="chords">Daftar chord untuk diagram gitar & piano</label><input id="chords" placeholder="C, G, Am, F"><p class="hint">Pisahkan dengan koma. Isi sesuai chord yang benar-benar dipakai di lagu.</p></div>
+<div class="actions"><button class="btn primary" type="submit" id="saveBtn">Simpan lagu</button><button class="btn" type="button" id="resetBtn">Kosongkan form</button></div>
+<p class="status" id="status" role="status"></p>
+</form>
+</div>
+<div class="card">
+<h2>Daftar lagu tersimpan di perangkat ini</h2>
+<div id="songList"></div>
+<div class="actions" style="margin-top:12px"><button class="btn" id="exportBtn" type="button">Ekspor cadangan</button><button class="btn" id="importBtn" type="button">Impor cadangan</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+<p class="hint">Ekspor membuat file cadangan JSON. Simpan file itu jika ingin memindahkan lagu ke perangkat lain.</p>
+</div>
+<div class="actions"><a class="btn" href="index.html">← Lihat website</a></div>
+</main>
+<script>
+const KEY="dayakLyricsSongs";
+const form=document.getElementById("songForm"),titleInput=document.getElementById("title"),artistInput=document.getElementById("artist"),lyricsInput=document.getElementById("lyrics"),chordsInput=document.getElementById("chords"),statusEl=document.getElementById("status");
+let editingId=null;
+function readSongs(){try{const d=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(d)?d:[]}catch(_){return[]}}
+function writeSongs(list){localStorage.setItem(KEY,JSON.stringify(list))}
+function resetForm(){editingId=null;form.reset();document.getElementById("formTitle").textContent="Tambah lagu baru";document.getElementById("saveBtn").textContent="Simpan lagu";statusEl.textContent=""}
+function renderList(){
+ const list=readSongs(),root=document.getElementById("songList");root.innerHTML="";
+ if(!list.length){root.textContent="Belum ada lagu yang disimpan di perangkat ini.";return}
+ list.forEach(song=>{
+  const item=document.createElement("div");item.className="song-item";
+  const info=document.createElement("div");info.className="song-info";
+  const name=document.createElement("strong");name.textContent=song.title||"Tanpa judul";
+  const artist=document.createElement("span");artist.textContent=song.artist||"Penyanyi belum diisi";
+  info.append(name,artist);
+  const actions=document.createElement("div");actions.className="song-actions";
+  const edit=document.createElement("button");edit.className="btn";edit.type="button";edit.textContent="Edit";edit.onclick=()=>editSong(song.id);
+  const del=document.createElement("button");del.className="btn danger";del.type="button";del.textContent="Hapus";del.onclick=()=>deleteSong(song.id);
+  actions.append(edit,del);item.append(info,actions);root.append(item);
+ });
+}
+function editSong(id){
+ const song=readSongs().find(s=>String(s.id)===String(id));if(!song)return;
+ editingId=song.id;titleInput.value=song.title||"";artistInput.value=song.artist||"";lyricsInput.value=song.lyrics||"";chordsInput.value=(song.chords||[]).join(", ");
+ document.getElementById("formTitle").textContent="Edit lagu";document.getElementById("saveBtn").textContent="Simpan perubahan";statusEl.textContent="";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function deleteSong(id){
+ const song=readSongs().find(s=>String(s.id)===String(id));if(!song)return;
+ if(!confirm('Hapus lagu "'+song.title+'"?'))return;
+ writeSongs(readSongs().filter(s=>String(s.id)!==String(id)));
+ if(String(editingId)===String(id))resetForm();renderList();statusEl.textContent="Lagu dihapus dari penyimpanan lokal.";
+}
+form.addEventListener("submit",e=>{
+ e.preventDefault();
+ const title=titleInput.value.trim(),artist=artistInput.value.trim(),lyrics=lyricsInput.value.trim();
+ if(!title||!artist||!lyrics){statusEl.textContent="Judul, penyanyi, dan lirik wajib diisi.";return}
+ const chordList=[...new Set(chordsInput.value.split(",").map(x=>x.trim()).filter(Boolean))];
+ const list=readSongs();
+ if(editingId!==null){
+  const i=list.findIndex(s=>String(s.id)===String(editingId));
+  if(i<0){statusEl.textContent="Lagu tidak ditemukan. Coba muat ulang halaman.";return}
+  list[i]={...list[i],title,artist,lyrics,chords:chordList};
+ }else{
+  list.push({id:"song-"+Date.now(),title,artist,lyrics,chords:chordList,createdAt:new Date().toISOString()});
+ }
+ try{writeSongs(list);resetForm();renderList();statusEl.textContent="Lagu berhasil disimpan di browser ini."}
+ catch(_){statusEl.textContent="Gagal menyimpan. Penyimpanan browser mungkin penuh atau dinonaktifkan."}
+});
+document.getElementById("resetBtn").onclick=resetForm;
+document.getElementById("exportBtn").onclick=()=>{
+ const blob=new Blob([JSON.stringify(readSongs(),null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="cadangan-lirik-chord-dayak.json";a.click();URL.revokeObjectURL(url);
+ statusEl.textContent="Cadangan lagu diekspor.";
+};
+document.getElementById("importBtn").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const data=JSON.parse(await file.text());
+  if(!Array.isArray(data)||data.some(s=>!s||typeof s.title!=="string"||typeof s.artist!=="string"||typeof s.lyrics!=="string"))throw new Error("format");
+  if(!confirm("Impor "+data.length+" lagu? Lagu dengan ID yang sama akan diganti."))return;
+  const existing=readSongs(),map=new Map(existing.map(s=>[String(s.id),s]));
+  data.forEach((s,i)=>{const id=s.id||("import-"+Date.now()+"-"+i);map.set(String(id),{id,title:s.title,artist:s.artist,lyrics:s.lyrics,chords:Array.isArray(s.chords)?s.chords:[]})});
+  writeSongs([...map.values()]);renderList();statusEl.textContent="Cadangan berhasil diimpor ke browser ini.";
+ }catch(_){statusEl.textContent="File cadangan tidak valid atau gagal dibaca."}
+ e.target.value="";
+});
+renderList();
+</script>
+</body>
+</html>
