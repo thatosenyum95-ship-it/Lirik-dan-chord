@@ -307,7 +307,10 @@
       let chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
       if(Array.isArray(song.chords)) chordList=chordList.concat(song.chords);
       const lyricChordPattern = /\[([A-G](?:#|b)?[^\]]*)\]/g;
-      chordList=chordList.concat([...String(song.lyrics||"").matchAll(lyricChordPattern)].map(match=>match[1]));
+      const lyricSource=String(song.lyrics||"");
+      chordList=chordList.concat([...lyricSource.matchAll(lyricChordPattern)].map(match=>match[1]));
+      const plainChordPattern=/(?:^|\\s)([A-G](?:#|b)?(?:maj|min|m|dim|aug|sus|add)?\\d*(?:\\/[A-G](?:#|b)?)?)(?=\\s|$)/gm;
+      chordList=chordList.concat([...lyricSource.matchAll(plainChordPattern)].map(match=>match[1]));
       chordList=Array.from(new Set(chordList.map(normalizeChord).filter(Boolean)));
       const guitar=document.getElementById("guitarChordCards");
       guitar.innerHTML="";
