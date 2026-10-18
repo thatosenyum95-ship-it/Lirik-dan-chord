@@ -27,7 +27,7 @@
     .artist-panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}.artist-panel.open{display:block}.artist-list{display:flex;flex-wrap:wrap;gap:8px}.artist-chip{border:1px solid var(--line);border-radius:999px;background:var(--surface2);padding:8px 12px;color:var(--text)}
     .popular{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.song-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;color:var(--text);box-shadow:var(--shadow);min-width:0}.song-card:hover{transform:translateY(-2px);border-color:var(--accent);transition:.18s}.cover{height:105px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#dcefe4,#b7d9c2);color:#245b43;font-size:2rem;margin-bottom:13px}.dark .cover{background:linear-gradient(135deg,#263f31,#345b43);color:#d4f2df}.song-title{font-weight:800;margin:0 0 3px;overflow-wrap:anywhere}.song-artist{font-size:.88rem;color:var(--muted);margin:0}.song-meta{font-size:.75rem;color:var(--muted);margin-top:12px}
     .empty{background:var(--surface);border:1px dashed var(--line);padding:28px;border-radius:16px;text-align:center;color:var(--muted)}
-    .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px;padding:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px}.detail-tools[hidden]{display:none!important}.lyrics.raw-lyrics{white-space:pre;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;overflow-x:auto;overflow-y:visible}.lyric-menu-title{font-size:.9rem;font-weight:800;margin:0 0 8px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:visible}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);border-radius:20px 20px 0 0;font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:auto;min-height:300px;max-height:none;overflow:visible;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1rem);line-height:1.5;overscroll-behavior:auto}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px;padding:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px}.detail-tools[hidden]{display:none!important}.lyrics.raw-lyrics{white-space:normal;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;overflow-x:visible;overflow-y:visible}.chord-line{display:flex;flex-direction:column;align-items:flex-start;min-height:1.5em}.chord-line-inner{position:relative;width:max-content;min-width:100%;padding-top:1.25em;box-sizing:border-box}.chord-line-chords{position:absolute;left:0;top:0;height:1.25em;line-height:1.25;white-space:pre;color:#a11d22;font-weight:800}.chord-line-lyrics{white-space:pre;line-height:1.5;min-height:1.5em}.plain-lyric-line{white-space:pre;min-height:1.5em;line-height:1.5}.lyric-menu-title{font-size:.9rem;font-weight:800;margin:0 0 8px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:visible}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);border-radius:20px 20px 0 0;font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:auto;min-height:300px;max-height:none;overflow:visible;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1rem);line-height:1.5;overscroll-behavior:auto}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
     footer{padding:22px 0 32px;text-align:center;color:var(--muted);font-size:.85rem}
 
     .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:14px}
@@ -254,9 +254,46 @@
     }
 
     function renderSongLyrics(song){
-      // Tampilkan teks persis seperti yang ditulis di Admin. Spasi di depan chord,
-      // baris kosong, dan pergantian baris harus tetap utuh agar chord sejajar.
-      lyricsBox.textContent = String(song.lyrics || "").replace(/\r\n?/g, "\n");
+      // Baca format Admin [C]lirik dan letakkan chord tepat pada indeks kata.
+      // Font monospace menjaga setiap spasi tetap punya lebar yang konsisten.
+      const source = String(song.lyrics || "").replace(/\r\n?/g, "\n");
+      lyricsBox.replaceChildren();
+      const pattern = /\[([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?)\]/g;
+      source.split("\n").forEach(line => {
+        const matches = [...line.matchAll(pattern)];
+        if (!matches.length) {
+          const plain = document.createElement("div");
+          plain.className = "plain-lyric-line";
+          plain.textContent = line || "\u00a0";
+          lyricsBox.appendChild(plain);
+          return;
+        }
+        const row = document.createElement("div");
+        row.className = "chord-line";
+        const inner = document.createElement("div");
+        inner.className = "chord-line-inner";
+        const chordRow = document.createElement("div");
+        chordRow.className = "chord-line-chords";
+        const lyricRow = document.createElement("div");
+        lyricRow.className = "chord-line-lyrics";
+        let lyric = "";
+        let last = 0;
+        matches.forEach(match => {
+          lyric += line.slice(last, match.index);
+          const chord = document.createElement("span");
+          chord.style.position = "absolute";
+          chord.style.left = (lyric.length * 1) + "ch";
+          chord.style.whiteSpace = "pre";
+          chord.textContent = match[1];
+          chordRow.appendChild(chord);
+          last = match.index + match[0].length;
+        });
+        lyric += line.slice(last);
+        lyricRow.textContent = lyric || "\u00a0";
+        inner.append(chordRow, lyricRow);
+        row.appendChild(inner);
+        lyricsBox.appendChild(row);
+      });
       lyricsBox.scrollTop = 0;
       lyricsBox.scrollLeft = 0;
     }
