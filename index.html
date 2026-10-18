@@ -296,15 +296,6 @@
       return svg+'</svg>';
     }
     function normalizeChord(chord){return String(chord||"").trim().replace(/\s+/g,"");}
-    function guitarDiagram(chord){
-      const shape=guitarShapes[chord]||null, x0=12, y0=18, dx=10, dy=16;
-      let svg='<svg class="guitar-svg" viewBox="0 0 84 112" role="img" aria-label="Diagram gitar '+chord+'">';
-      for(let i=0;i<6;i++) svg+='<line x1="'+(x0+i*dx)+'" y1="'+y0+'" x2="'+(x0+i*dx)+'" y2="'+(y0+4*dy)+'" stroke="currentColor" stroke-width="'+(i===0?1.8:1)+'"/>';
-      for(let f=0;f<=4;f++) svg+='<line x1="'+x0+'" y1="'+(y0+f*dy)+'" x2="'+(x0+5*dx)+'" y2="'+(y0+f*dy)+'" stroke="currentColor" stroke-width="'+(f===0?2.5:1)+'"/>';
-      if(shape){shape.forEach((f,i)=>{const x=x0+i*dx;if(f===-1)svg+='<text x="'+x+'" y="11" font-size="9" text-anchor="middle" fill="currentColor">×</text>';else if(f===0)svg+='<circle cx="'+x+'" cy="10" r="3" fill="none" stroke="currentColor"/>';else if(f<=4)svg+='<circle cx="'+x+'" cy="'+(y0+(f-.5)*dy)+'" r="3.4" fill="var(--accent)"/>';});}
-      else svg+='<text x="42" y="100" font-size="8" text-anchor="middle" fill="currentColor">Bentuk umum</text>';
-      return svg+'</svg>';
-    }
     function renderChordLibrary(song){
       // Gabungkan chord dari simbol lirik dan daftar chord yang diisi di admin.
       let chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
