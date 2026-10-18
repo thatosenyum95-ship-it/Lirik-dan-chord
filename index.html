@@ -32,20 +32,14 @@
 
     .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:14px}
     .chord-library h3{font-size:.98rem;margin:0 0 3px}.chord-library-intro{margin:0 0 10px;color:var(--muted);font-size:.78rem}
-    .chord-groups{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .chord-group{border:1px solid var(--line);border-radius:11px;padding:8px;min-width:0}
-    .chord-group h4{margin:0 0 7px;font-size:.8rem}
+    .chord-groups{display:grid;grid-template-columns:1fr;gap:8px}
+    .chord-group{border:0;border-radius:12px;padding:0;min-width:0}
+    .chord-group h4{display:none}
     .chord-cards{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
-    .chord-card{border:1px solid var(--line);border-radius:8px;padding:5px 4px;text-align:center;background:var(--bg);width:68px;min-width:0}
+    .chord-card{border:1px solid var(--line);border-radius:12px;padding:9px 6px 7px;text-align:center;background:var(--bg);width:76px;min-width:0}
     .chord-card strong{display:block;font-size:.78rem;margin-bottom:3px}
     .guitar-svg{width:43px;height:62px;max-width:100%;display:block;margin:auto}
-    .piano-wrap{height:62px;position:relative;display:flex;margin:0 auto;max-width:62px}
-    .piano-white{height:100%;flex:1;min-width:0;background:#fff;border:1px solid #66716a;border-radius:0 0 3px 3px;position:relative}
-    .piano-white.active{background:#9fe2ba}
-    .piano-black[data-active="true"]{background:#4b9368;border-color:#4b9368}
-    .piano-black{position:absolute;top:0;height:62%;width:9%;background:#202923;border:1px solid #111;border-radius:0 0 2px 2px;z-index:2;pointer-events:none}
-    .piano-note{font-size:.58rem;color:var(--muted);margin-top:3px;line-height:1.2}
-    @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-card{width:66px}.guitar-svg{width:40px;height:58px}.piano-wrap{height:58px;max-width:58px}}
+                @media(max-width:650px){.chord-groups{grid-template-columns:1fr}.chord-card{width:66px}.guitar-svg{width:40px;height:58px}.piano-wrap{height:58px;max-width:58px}}
     @media(max-width:650px){.shell{width:min(100% - 22px,1040px)}header{padding-top:22px;border-radius:0 0 22px 22px}.brand-icon{width:45px;height:45px}.top-actions{gap:5px}.icon-btn{width:39px;height:39px}.alphabet{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.popular{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.song-card{padding:11px}.cover{height:82px}.section-head{align-items:flex-start;flex-direction:column}.lyrics{height:auto;min-height:280px;max-height:none;overflow:visible;padding:18px 16px}.speed{min-width:100%}}
     @media(max-width:380px){.popular{grid-template-columns:1fr}.cover{height:75px}.tagline{font-size:.88rem}}
   </style>
@@ -104,10 +98,9 @@
       </div>
       <section class="chord-library" aria-labelledby="chordLibraryTitle">
         <h3 id="chordLibraryTitle">Chord Lagu Ini</h3>
-        <p class="chord-library-intro">Semua chord yang digunakan dalam lagu ditampilkan di sini untuk gitar dan piano.</p>
+        <p class="chord-library-intro">Bentuk chord gitar yang dipakai dalam lagu ini.</p>
         <div class="chord-groups">
-          <div class="chord-group"><h4>🎸 Diagram Gitar</h4><div class="chord-cards" id="guitarChordCards"></div></div>
-          <div class="chord-group"><h4>🎹 Tuts Piano</h4><div class="chord-cards" id="pianoChordCards"></div></div>
+          <div class="chord-group"><div class="chord-cards" id="guitarChordCards"></div></div>
         </div>
       </section>
     </section>
@@ -228,15 +221,6 @@
       else svg+='<text x="42" y="100" font-size="8" text-anchor="middle" fill="currentColor">Bentuk umum</text>';
       return svg+'</svg>';
     }
-    function pianoDiagram(chord){
-      const notes=chordNotes[chord]||chordNotes[chord.replace(/m$/,"")]||[];
-      const white=["C","D","E","F","G","A","B"], black=[{n:"C#",x:10},{n:"D#",x:24},{n:"F#",x:52},{n:"G#",x:66},{n:"A#",x:80}];
-      let html='<div class="piano-wrap" role="img" aria-label="Tuts piano chord '+chord+'">';
-      white.forEach(n=>html+='<div class="piano-white '+(notes.includes(n)?"active":"")+'"></div>');
-      black.forEach(k=>{html+='<div class="piano-black" style="left:'+k.x+'%"'+(notes.includes(k.n)?' data-active="true"':'')+'></div>';});
-      html+='</div><div class="piano-note">'+(notes.length?notes.join(" · "):"Chord "+chord)+'</div>';
-      return html;
-    }
     function renderChordLibrary(song){
       // Gabungkan chord dari simbol lirik dan daftar chord yang diisi di admin.
       let chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
@@ -244,13 +228,12 @@
       const lyricChordPattern = /\[([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?)\]/g;
       chordList=chordList.concat([...String(song.lyrics||"").matchAll(lyricChordPattern)].map(match=>match[1]));
       chordList=Array.from(new Set(chordList.map(normalizeChord).filter(Boolean)));
-      const guitar=document.getElementById("guitarChordCards"), piano=document.getElementById("pianoChordCards");
-      guitar.innerHTML="";piano.innerHTML="";
+      const guitar=document.getElementById("guitarChordCards");
+      guitar.innerHTML="";
       chordList.forEach(chord=>{
         const g=document.createElement("div");g.className="chord-card";g.innerHTML='<strong></strong>'+guitarDiagram(chord);g.querySelector("strong").textContent=chord;guitar.appendChild(g);
-        const p=document.createElement("div");p.className="chord-card";p.innerHTML='<strong></strong>'+pianoDiagram(chord);p.querySelector("strong").textContent=chord;piano.appendChild(p);
       });
-      if(!chordList.length){guitar.textContent="Belum ada chord.";piano.textContent="Belum ada chord.";}
+      if(!chordList.length){guitar.textContent="Belum ada chord.";}
     }
 
     function renderSongLyrics(song){
