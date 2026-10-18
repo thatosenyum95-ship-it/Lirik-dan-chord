@@ -47,9 +47,15 @@
       .top-actions{gap:5px}
       .icon-btn{width:39px;height:39px}
       .alphabet{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-      .popular{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-      .song-card{padding:11px}
-      .cover{height:82px}
+      .popular{grid-template-columns:1fr;gap:8px}
+      .song-card{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:14px;box-shadow:none}
+      .song-card:hover{transform:none}
+      .cover{height:48px;width:48px;min-width:48px;border-radius:11px;margin:0;font-size:1.35rem}
+      .song-info{flex:1;min-width:0}
+      .song-title{font-size:.96rem;margin:0 0 2px}
+      .song-artist{font-size:.82rem}
+      .song-meta{display:none}
+      .song-card::after{content:"›";font-size:1.6rem;line-height:1;color:var(--muted);margin-left:auto;padding-left:4px}
       .section-head{align-items:flex-start;flex-direction:column}
       .lyrics{height:auto;min-height:280px;max-height:none;overflow:visible;padding:18px 14px;font-size:var(--lyric-size,1rem);line-height:1.65}
       .lyrics.raw-lyrics{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;white-space:normal;overflow-wrap:anywhere}
@@ -205,7 +211,7 @@
       songGrid.innerHTML="";
       filtered.sort((a,b)=>b.popular-a.popular).forEach(song=>{
         const button=document.createElement("button");button.className="song-card";
-        button.innerHTML='<div class="cover" aria-hidden="true">♫</div><p class="song-title"></p><p class="song-artist"></p><div class="song-meta">Lihat lirik & chord ↗</div>';
+        button.innerHTML='<div class="cover" aria-hidden="true">♫</div><div class="song-info"><p class="song-title"></p><p class="song-artist"></p><div class="song-meta">Lihat lirik & chord ↗</div></div>';
         button.querySelector(".song-title").textContent=song.title;
         button.querySelector(".song-artist").textContent=song.artist;
         button.onclick=()=>openSong(song);
