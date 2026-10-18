@@ -389,7 +389,7 @@
     function applyTranspose(){
       if(!originalSong) return;
       const shiftedSong={...originalSong,
-        lyrics:String(originalSong.lyrics||"").replace(/\[([A-G](?:#|b)?[^\]]*)\]/g,(all,chord)=>"["+transposeChordName(chord,transposeSteps)+"]"),
+        lyrics:String(originalSong.lyrics||"").replace(/(^|\s)(\[?)([A-G](?:#|b)?(?:maj|min|m|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?)(\]?)(?=\s|$)/gm,(all,before,open,chord,close)=>before+open+transposeChordName(chord,transposeSteps)+close),
         chords:Array.isArray(originalSong.chords)?originalSong.chords.map(chord=>transposeChordName(chord,transposeSteps)):originalSong.chords
       };
       activeSong=shiftedSong;
