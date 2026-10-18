@@ -27,7 +27,7 @@
     .artist-panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}.artist-panel.open{display:block}.artist-list{display:flex;flex-wrap:wrap;gap:8px}.artist-chip{border:1px solid var(--line);border-radius:999px;background:var(--surface2);padding:8px 12px;color:var(--text)}
     .popular{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.song-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;color:var(--text);box-shadow:var(--shadow);min-width:0}.song-card:hover{transform:translateY(-2px);border-color:var(--accent);transition:.18s}.cover{height:105px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#dcefe4,#b7d9c2);color:#245b43;font-size:2rem;margin-bottom:13px}.dark .cover{background:linear-gradient(135deg,#263f31,#345b43);color:#d4f2df}.song-title{font-weight:800;margin:0 0 3px;overflow-wrap:anywhere}.song-artist{font-size:.88rem;color:var(--muted);margin:0}.song-meta{font-size:.75rem;color:var(--muted);margin-top:12px}
     .empty{background:var(--surface);border:1px dashed var(--line);padding:28px;border-radius:16px;text-align:center;color:var(--muted)}
-    .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:min(57vh,520px);min-height:300px;overflow:auto;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1.12rem);line-height:1.75;overscroll-behavior:contain}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px;padding:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px}.detail-tools[hidden]{display:none!important}.lyrics.raw-lyrics{white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4}.lyric-menu-title{font-size:.9rem;font-weight:800;margin:0 0 8px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:min(57vh,520px);min-height:300px;overflow:auto;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1.12rem);line-height:1.75;overscroll-behavior:contain}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
     footer{padding:22px 0 32px;text-align:center;color:var(--muted);font-size:.85rem}
 
     .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:14px}
@@ -89,25 +89,18 @@
       <button class="btn back" id="backBtn">← Kembali ke daftar lagu</button>
       <div class="detail-head">
         <h2 id="detailTitle">Judul lagu</h2><p class="muted" id="detailArtist" style="margin:0">Nama penyanyi</p>
-        <div class="detail-tools">
-          <button class="btn" id="smallerBtn" aria-label="Kecilkan teks">A−</button>
-          <button class="btn" id="largerBtn" aria-label="Besarkan teks">A+</button>
+        <div class="detail-tools" id="lyricMenu" hidden>
+          <p class="lyric-menu-title">Pengaturan lirik</p>
+          <button class="btn" id="smallerBtn" aria-label="Kecilkan teks">A− Kecilkan</button>
+          <button class="btn" id="largerBtn" aria-label="Besarkan teks">A+ Besarkan</button>
           <div class="speed"><label for="speedRange">Kecepatan</label><input id="speedRange" type="range" min="10" max="100" value="35"><span id="speedLabel" class="small">Normal</span></div>
-          <button class="btn primary" id="pauseBtn">Ⅱ Jeda</button>
+          <button class="btn primary" id="pauseBtn">▶ Mulai scroll</button>
         </div>
       </div>
       <div class="reader">
-        <div class="reader-label"><span>LIRIK & CHORD</span><span id="scrollStatus">Auto-scroll aktif</span></div>
-        <div class="lyrics" id="lyricsBox" tabindex="0" aria-label="Lirik dan chord yang dapat digulir">
-          <div class="verse"><div class="chords"><span>C</span><span>G</span></div><p class="lyric-line">Contoh baris lirik pertama.</p></div>
-          <div class="verse"><div class="chords"><span>Am</span><span>F</span></div><p class="lyric-line">Contoh baris lirik kedua.</p></div>
-          <div class="verse"><div class="chords"><span>G</span><span>C</span></div><p class="lyric-line">Contoh baris lirik selanjutnya.</p></div>
-          <div class="verse"><div class="chords"><span>F</span><span>G</span></div><p class="lyric-line">Contoh baris lirik berikutnya.</p></div>
-          <div class="verse"><div class="chords"><span>C</span><span>Am</span></div><p class="lyric-line">Tambahkan lirik lagu di bagian ini.</p></div>
-          <div class="verse"><div class="chords"><span>F</span><span>G</span></div><p class="lyric-line">Lirik akan bergerak ke atas secara otomatis.</p></div>
-          <div class="verse"><div class="chords"><span>C</span></div><p class="lyric-line">Semua teks ini hanya contoh tata letak, bukan lirik lagu asli.</p></div>
-        </div>
-        <div class="reader-footer"><span>Atur kecepatan sesuai kenyamananmu.</span><span>Gunakan Jeda untuk berhenti sementara.</span></div>
+        <div class="reader-label"><span>LIRIK & CHORD</span><span id="scrollStatus">Scroll manual</span></div>
+        <div class="lyrics raw-lyrics" id="lyricsBox" tabindex="0" aria-label="Lirik dan chord sesuai susunan admin"></div>
+        <div class="reader-footer"><span>Geser lirik secara manual, atau buka menu ☰ untuk mengatur ukuran teks dan scroll otomatis.</span></div>
       </div>
       <section class="chord-library" aria-labelledby="chordLibraryTitle">
         <h3 id="chordLibraryTitle">Chord Lagu Ini</h3>
@@ -259,63 +252,76 @@
     }
 
     function renderSongLyrics(song){
-      if(!song.lyrics){return;}
-      lyricsBox.innerHTML="";
-      const lines=String(song.lyrics).split(/\r?\n/);
-      lines.forEach(line=>{
-        const verse=document.createElement("div");verse.className="verse";
-        const chordRow=document.createElement("div");chordRow.className="chords";
-        const lyric=document.createElement("p");lyric.className="lyric-line";
-        const clean=line.replace(/\[[^\]]+\]/g,"");
-        const matches=[...line.matchAll(/\[([A-G](?:#|b)?(?:m|maj7|m7|7|sus2|sus4|dim|aug)?)\]/g)];
-        matches.forEach(match=>{const span=document.createElement("span");span.textContent=match[1];chordRow.appendChild(span);});
-        lyric.textContent=clean.trim();
-        if(!lyric.textContent && !matches.length){return;}
-        verse.appendChild(chordRow);verse.appendChild(lyric);lyricsBox.appendChild(verse);
-      });
+      // Tampilkan isi persis seperti yang disimpan admin. Jangan pecah atau mengurutkan ulang chord.
+      lyricsBox.textContent = String(song.lyrics || "");
+      lyricsBox.scrollTop = 0;
     }
     function openSong(song){
       activeSong=song;
+      stopScroll();
+      paused=true;
       renderSongLyrics(song);
-      renderChordLibrary(song);homeView.classList.remove("active");detailView.classList.add("active");
+      renderChordLibrary(song);
+      homeView.classList.remove("active");detailView.classList.add("active");
       document.getElementById("detailTitle").textContent=song.title;
       document.getElementById("detailArtist").textContent=song.artist;
-      lyricsBox.scrollTop=0;paused=false;document.getElementById("pauseBtn").textContent="Ⅱ Jeda";
-      startScroll();window.scrollTo({top:0,behavior:"smooth"});
+      document.getElementById("pauseBtn").textContent="▶ Mulai scroll";
+      document.getElementById("scrollStatus").textContent="Scroll manual";
+      document.getElementById("lyricMenu").hidden=true;
+      window.scrollTo({top:0,behavior:"smooth"});
     }
     function stopScroll(){if(scrollTimer){clearInterval(scrollTimer);scrollTimer=null;}}
     function startScroll(){
-      stopScroll();if(paused)return;
+      stopScroll();
+      paused=false;
       const speed=Number(document.getElementById("speedRange").value);
       const delay=Math.max(25,130-speed);
       scrollTimer=setInterval(()=>{
-        if(!paused && lyricsBox.scrollTop+lyricsBox.clientHeight<lyricsBox.scrollHeight-1){
+        if(lyricsBox.scrollTop+lyricsBox.clientHeight<lyricsBox.scrollHeight-1){
           lyricsBox.scrollTop+=0.55+(speed/100)*1.25;
-        }else if(lyricsBox.scrollTop+lyricsBox.clientHeight>=lyricsBox.scrollHeight-1){
-          stopScroll();document.getElementById("scrollStatus").textContent="Lirik selesai";
+        }else{
+          stopScroll();
+          paused=true;
+          document.getElementById("pauseBtn").textContent="▶ Mulai lagi";
+          document.getElementById("scrollStatus").textContent="Lirik selesai";
         }
       },delay);
+      document.getElementById("pauseBtn").textContent="Ⅱ Jeda scroll";
       document.getElementById("scrollStatus").textContent="Auto-scroll aktif";
     }
     document.getElementById("pauseBtn").onclick=()=>{
-      paused=!paused;
-      document.getElementById("pauseBtn").textContent=paused?"▶ Lanjutkan":"Ⅱ Jeda";
-      document.getElementById("scrollStatus").textContent=paused?"Scroll dijeda":"Auto-scroll aktif";
-      if(paused)stopScroll();else startScroll();
+      if(scrollTimer){
+        stopScroll();
+        paused=true;
+        document.getElementById("pauseBtn").textContent="▶ Lanjutkan scroll";
+        document.getElementById("scrollStatus").textContent="Scroll dijeda";
+      }else{
+        startScroll();
+      }
     };
     document.getElementById("speedRange").oninput=()=>{
       const v=Number(document.getElementById("speedRange").value);
       document.getElementById("speedLabel").textContent=v<30?"Lambat":v<65?"Normal":"Cepat";
-      if(!paused)startScroll();
+      if(scrollTimer)startScroll();
     };
     document.getElementById("smallerBtn").onclick=()=>{fontSize=Math.max(.82,fontSize-.1);lyricsBox.style.setProperty("--lyric-size",fontSize+"rem");};
     document.getElementById("largerBtn").onclick=()=>{fontSize=Math.min(1.8,fontSize+.1);lyricsBox.style.setProperty("--lyric-size",fontSize+"rem");};
     document.getElementById("backBtn").onclick=()=>{stopScroll();detailView.classList.remove("active");homeView.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});};
     document.getElementById("menuBtn").onclick=()=>{
+      const button=document.getElementById("menuBtn");
+      if(detailView.classList.contains("active")){
+        const panel=document.getElementById("lyricMenu");
+        panel.hidden=!panel.hidden;
+        button.setAttribute("aria-expanded",String(!panel.hidden));
+        button.setAttribute("aria-label",panel.hidden?"Buka pengaturan lirik":"Tutup pengaturan lirik");
+        button.title=panel.hidden?"Pengaturan lirik":"Tutup pengaturan lirik";
+        return;
+      }
       const menu=document.getElementById("alphabetMenu");
       const isOpen=menu.classList.toggle("open");
-      document.getElementById("menuBtn").setAttribute("aria-expanded",String(isOpen));
-      document.getElementById("menuBtn").setAttribute("aria-label",isOpen?"Tutup daftar abjad":"Buka daftar abjad A sampai Z");
+      button.setAttribute("aria-expanded",String(isOpen));
+      button.setAttribute("aria-label",isOpen?"Tutup daftar abjad":"Buka daftar abjad A sampai Z");
+      button.title=isOpen?"Tutup daftar penyanyi":"Daftar penyanyi A sampai Z";
       if(!isOpen)artistPanel.classList.remove("open");
     };
     document.getElementById("clearLetter").onclick=()=>{selectedLetter="";renderAlphabet();renderArtists();renderSongs();};
