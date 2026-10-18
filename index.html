@@ -241,6 +241,8 @@
       // Gabungkan chord dari simbol lirik dan daftar chord yang diisi di admin.
       let chordList=Array.from(lyricsBox.querySelectorAll(".chords span")).map(el=>el.textContent.trim());
       if(Array.isArray(song.chords)) chordList=chordList.concat(song.chords);
+      const lyricChordPattern = /\[([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G](?:#|b)?)?)\]/g;
+      chordList=chordList.concat([...String(song.lyrics||"").matchAll(lyricChordPattern)].map(match=>match[1]));
       chordList=Array.from(new Set(chordList.map(normalizeChord).filter(Boolean)));
       const guitar=document.getElementById("guitarChordCards"), piano=document.getElementById("pianoChordCards");
       guitar.innerHTML="";piano.innerHTML="";
