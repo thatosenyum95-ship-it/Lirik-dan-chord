@@ -32,6 +32,11 @@
     .view{display:none}.view.active{display:block}.back{margin-bottom:18px}.detail-head{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}.detail-head h2{margin:0 0 4px;font-size:1.55rem}.detail-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:17px;padding:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px}.detail-tools[hidden]{display:none!important}.lyrics.raw-lyrics{white-space:normal;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;overflow-x:visible;overflow-y:visible}.chord-line{display:flex;flex-direction:column;align-items:flex-start;min-height:1.5em}.chord-line-inner{position:relative;width:max-content;min-width:100%;padding-top:1.25em;box-sizing:border-box}.chord-line-chords{position:absolute;left:0;top:0;height:1.25em;line-height:1.25;white-space:pre;color:#a11d22;font-weight:800}.chord-line-lyrics{white-space:pre;line-height:1.5;min-height:1.5em}.plain-lyric-line{white-space:pre;min-height:1.5em;line-height:1.5}.lyric-menu-title{font-size:.9rem;font-weight:800;margin:0 0 8px}.speed{display:flex;align-items:center;gap:10px;background:var(--surface2);padding:9px 12px;border-radius:12px;flex:1;min-width:220px}.speed input{width:100%;accent-color:var(--accent)}.reader{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:visible}.reader-label{padding:13px 18px;border-bottom:1px solid var(--line);border-radius:20px 20px 0 0;font-size:.78rem;font-weight:800;letter-spacing:.09em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}.lyrics{height:auto;min-height:300px;max-height:none;overflow:visible;scroll-behavior:auto;padding:24px clamp(18px,5vw,44px);font-size:var(--lyric-size,1rem);line-height:1.5;overscroll-behavior:auto}.verse{padding:15px 0;border-bottom:1px solid var(--line)}.chords{display:flex;gap:28px;color:var(--accent);font-weight:850;font-size:.95em;margin-bottom:4px;flex-wrap:wrap}.lyric-line{margin:0}.reader-footer{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
     footer{padding:22px 0 32px;text-align:center;color:var(--muted);font-size:.85rem}
 
+    .transpose-tools{display:flex;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:15px}
+    .transpose-label{font-weight:800;font-size:.92rem;width:100%}
+    #transposeValue{min-width:86px;text-align:center;font-variant-numeric:tabular-nums}
+    .transpose-note{width:100%;margin:0;color:var(--muted);font-size:.78rem}
+    .transpose-tools .btn{min-width:42px;padding:8px 12px}
     .chord-library{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:14px}
     .chord-library h3{font-size:.98rem;margin:0 0 3px}.chord-library-intro{margin:0 0 10px;color:var(--muted);font-size:.78rem}
     .chord-groups{display:grid;grid-template-columns:1fr;gap:8px}
@@ -117,6 +122,14 @@
           <div class="speed"><label for="speedRange">Kecepatan</label><input id="speedRange" type="range" min="10" max="100" value="35"><span id="speedLabel" class="small">Normal</span></div>
           <button class="btn primary" id="pauseBtn">▶ Mulai scroll</button>
         </div>
+      </div>
+      <div class="transpose-tools" aria-label="Pengaturan transpose nada">
+        <span class="transpose-label">🎼 Nada lagu</span>
+        <button class="btn" id="transposeDown" type="button" aria-label="Turunkan nada satu semitone">−</button>
+        <strong id="transposeValue" aria-live="polite">Asli (0)</strong>
+        <button class="btn" id="transposeUp" type="button" aria-label="Naikkan nada satu semitone">+</button>
+        <button class="btn" id="transposeReset" type="button">Reset</button>
+        <p class="transpose-note">Ubah nada tanpa mengubah susunan lirik. 1 langkah = 1 semitone.</p>
       </div>
       <div class="reader">
         <div class="reader-label"><span>LIRIK & CHORD</span><span id="scrollStatus">Scroll manual</span></div>
@@ -355,12 +368,54 @@
       lyricsBox.scrollTop = 0;
       lyricsBox.scrollLeft = 0;
     }
+    const transposeChromatic = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    const transposeFlatNames = {"C#":"Db","D#":"Eb","F#":"Gb","G#":"Ab","A#":"Bb"};
+    let originalSong = null;
+    let transposeSteps = 0;
+    function transposeChordName(chord, steps){
+      const value=String(chord||"").trim();
+      const match=value.match(/^([A-G])([#b]?)(.*?)(?:\/([A-G])([#b]?))?$/);
+      if(!match) return value;
+      const shiftRoot=(root,accidental)=>{
+        let note=root+accidental;
+        const normalized={"Db":"C#","Eb":"D#","Gb":"F#","Ab":"G#","Bb":"A#"};
+        note=normalized[note]||note;
+        const index=transposeChromatic.indexOf(note);
+        if(index<0) return root+accidental;
+        const shifted=transposeChromatic[(index+steps%12+12)%12];
+        return accidental==="b" && transposeFlatNames[shifted] ? transposeFlatNames[shifted] : shifted;
+      };
+      const root=shiftRoot(match[1],match[2]);
+      const bass=match[4] ? "/"+shiftRoot(match[4],match[5]) : "";
+      return root+match[3]+bass;
+    }
+    function applyTranspose(){
+      if(!originalSong) return;
+      const shiftedSong={...originalSong,
+        lyrics:String(originalSong.lyrics||"").replace(/\[([A-G](?:#|b)?[^\]]*)\]/g,(all,chord)=>"["+transposeChordName(chord,transposeSteps)+"]"),
+        chords:Array.isArray(originalSong.chords)?originalSong.chords.map(chord=>transposeChordName(chord,transposeSteps)):originalSong.chords
+      };
+      activeSong=shiftedSong;
+      renderSongLyrics(shiftedSong);
+      renderChordLibrary(shiftedSong);
+      const label=transposeSteps===0?"Asli (0)":(transposeSteps>0?"+":"")+transposeSteps+" semitone";
+      document.getElementById("transposeValue").textContent=label;
+      document.getElementById("transposeDown").disabled=transposeSteps<=-11;
+      document.getElementById("transposeUp").disabled=transposeSteps>=11;
+    }
+    document.getElementById("transposeDown").onclick=()=>{if(transposeSteps>-11){transposeSteps--;applyTranspose();}};
+    document.getElementById("transposeUp").onclick=()=>{if(transposeSteps<11){transposeSteps++;applyTranspose();}};
+    document.getElementById("transposeReset").onclick=()=>{transposeSteps=0;applyTranspose();};
+
     function openSong(song){
+      originalSong=song;
+      transposeSteps=0;
       activeSong=song;
       stopScroll();
       paused=true;
       renderSongLyrics(song);
       renderChordLibrary(song);
+      applyTranspose();
       homeView.classList.remove("active");detailView.classList.add("active");
       document.getElementById("detailTitle").textContent=song.title;
       document.getElementById("detailArtist").textContent=song.artist;
