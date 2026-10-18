@@ -135,6 +135,7 @@
     async function loadRemoteSongs(){
       try {
         const response = await fetch(SUPABASE_URL + "/rest/v1/dayak_songs?select=id,title,artist,lyrics,chords,is_published&is_published=eq.true&order=title.asc", {
+          cache: "no-store",
           headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
         });
         if (!response.ok) throw new Error("HTTP " + response.status);
@@ -260,13 +261,13 @@
     function renderSongLyrics(song){
       if(!song.lyrics){return;}
       lyricsBox.innerHTML="";
-      const lines=String(song.lyrics).split(/\\r?\\n/);
+      const lines=String(song.lyrics).split(/\r?\n/);
       lines.forEach(line=>{
         const verse=document.createElement("div");verse.className="verse";
         const chordRow=document.createElement("div");chordRow.className="chords";
         const lyric=document.createElement("p");lyric.className="lyric-line";
-        const clean=line.replace(/\\[[^\\]]+\\]/g,"");
-        const matches=[...line.matchAll(/\\[([A-G](?:#|b)?(?:m|maj7|m7|7|sus2|sus4|dim|aug)?)\\]/g)];
+        const clean=line.replace(/\[[^\]]+\]/g,"");
+        const matches=[...line.matchAll(/\[([A-G](?:#|b)?(?:m|maj7|m7|7|sus2|sus4|dim|aug)?)\]/g)];
         matches.forEach(match=>{const span=document.createElement("span");span.textContent=match[1];chordRow.appendChild(span);});
         lyric.textContent=clean.trim();
         if(!lyric.textContent && !matches.length){return;}
